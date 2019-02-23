@@ -1,6 +1,11 @@
 package com.observerapp.mobile.securesancharapp;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Handler;
+import android.os.Message;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -25,13 +30,20 @@ import java.util.Map;
 
 import static com.observerapp.mobile.securesancharapp.allTime.API_URL;
 
-public class welcome extends AppCompatActivity {
+public class welcome extends AppCompatActivity implements allTime{
 
     EditText e1,e2,e3,e4,e5;
+    TextInputLayout eh1,eh2;
     Button b1,b2;
     ProgressBar pB1;
     String OTP,UID,EMAIL,NAME;
     TextView tv1;
+    SharedPreferences sharedPreferences;
+
+    private Handler updateUIHandler = null;
+
+    // Message type code.
+    private final static int MESSAGE_UPDATE_TEXT_CHILD_THREAD =1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +52,8 @@ public class welcome extends AppCompatActivity {
 
         e1 = (EditText)findViewById(R.id.e1);
         e2 = (EditText)findViewById(R.id.e2);
+        eh1 = (TextInputLayout) findViewById(R.id.eh1);
+        eh2 = (TextInputLayout) findViewById(R.id.eh2);
 
         b1 = (Button) findViewById(R.id.b1);
         b2 = (Button) findViewById(R.id.b2);
@@ -47,7 +61,7 @@ public class welcome extends AppCompatActivity {
         pB1= (ProgressBar) findViewById(R.id.pB1);
         tv1= (TextView) findViewById(R.id.tv1);
 
-        e2.setVisibility(View.GONE);
+        eh2.setVisibility(View.GONE);
         pB1.setVisibility(View.GONE);
         b2.setVisibility(View.GONE);
         tv1.setVisibility(View.GONE);
@@ -72,6 +86,22 @@ public class welcome extends AppCompatActivity {
                 back();
             }
         });
+
+        sharedPreferences = getSharedPreferences(mypreference, Context.MODE_PRIVATE);
+
+        if(sharedPreferences.contains(s_uid)) {
+            Intent I = new Intent(welcome.this,registerProfile.class);
+            startActivity(I);
+            finish();
+            //Toast.makeText(this, "THERE IS SOMETHING IN SHARED PREFERENCE", Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+    public void putSharedPref(String K, String V){
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(K,V);
+        editor.commit();
     }
 
     public void sendOTP(){
@@ -88,8 +118,8 @@ public class welcome extends AppCompatActivity {
 
             // Instantiate the RequestQueue.
             RequestQueue queue = Volley.newRequestQueue(this);
-            //final String url = API_URL+"/register/"+param;
-            final String url = API_URL+"/hello.txt";
+            final String url = API_URL+"/register";
+            //final String url = API_URL+"/hello.php?getparam=get";
 
             // Request a string response from the provided URL.
             StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
@@ -102,30 +132,22 @@ public class welcome extends AppCompatActivity {
                             Toast.makeText(welcome.this, response, Toast.LENGTH_LONG).show();
                             try {
                                 JSONObject res = new JSONObject(response);
-
                                 OTP = res.getString("otp");
-                                UID = res.getString("userid");
+                                UID = res.getString("id");
                                 EMAIL=res.getString("email");
-                                NAME=res.getString("name");
+                                //NAME=res.getString("name");
 
-
-                                if(true){
-                                    next(); // NOT WORKING WHY ?????
-
-                                    String userIdVal = res.get("userId").toString();
-                                    //Toast.makeText(welcome.this, "Welcome "+res.get("username")+"("+userIdVal+")", Toast.LENGTH_SHORT).show();
-                                    Toast.makeText(welcome.this, response, Toast.LENGTH_LONG).show();
+                                next();
+                                Toast.makeText(welcome.this, response, Toast.LENGTH_LONG).show();
 /*
                                     putSharedPref(username,s1);
                                     putSharedPref(userId,userIdVal);
 */
-                                }else{
-                                    Toast.makeText(welcome.this, "Error in sending request", Toast.LENGTH_SHORT).show();
-                                    b1.setEnabled(true);
-                                }
 
                             } catch (JSONException e) {
                                 e.printStackTrace();
+                                b1.setEnabled(true);
+                                Toast.makeText(welcome.this, e.toString(), Toast.LENGTH_SHORT).show();
                             }
 
                         }
@@ -168,6 +190,13 @@ public class welcome extends AppCompatActivity {
 
         if(s2.equals(OTP)){
             Toast.makeText(this, "Your are successfully logged in...!!!", Toast.LENGTH_SHORT).show();
+
+            try{
+                putSharedPref(s_uid,UID);
+            }catch (Exception e){
+                Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
+            }
+
             Intent i = new Intent(welcome.this,registerProfile.class);
             startActivity(i);
             finish();
@@ -180,8 +209,8 @@ public class welcome extends AppCompatActivity {
 
     public void back(){
         b1.setEnabled(true);
-        e1.setVisibility(View.VISIBLE);
-        e2.setVisibility(View.GONE);
+        eh1.setVisibility(View.VISIBLE);
+        eh2.setVisibility(View.GONE);
         b1.setVisibility(View.VISIBLE);
         b2.setVisibility(View.GONE);
         tv1.setVisibility(View.GONE);
@@ -189,10 +218,35 @@ public class welcome extends AppCompatActivity {
 
     public void next(){
         Toast.makeText(this, "INSIDE NEXT", Toast.LENGTH_SHORT).show();
-        e1.setVisibility(View.GONE);
-        e2.setVisibility(View.VISIBLE);
+        eh1.setVisibility(View.GONE);
+        eh2.setVisibility(View.VISIBLE);
         b1.setVisibility(View.GONE);
         b2.setVisibility(View.VISIBLE);
         tv1.setVisibility(View.VISIBLE);
     }
+
+    /*
+     */
+    /* Create Handler object in main thread. *//*
+
+    private void createUpdateUiHandler()
+    {
+        if(updateUIHandler == null)
+        {
+            updateUIHandler = new Handler()
+            {
+                @Override
+                public void handleMessage(Message msg) {
+                    // Means the message is sent from child thread.
+                    if(msg.what == MESSAGE_UPDATE_TEXT_CHILD_THREAD)
+                    {
+                        // Update ui in main thread.
+                        next();
+                    }
+                }
+            };
+        }
+    }
+*/
+
 }

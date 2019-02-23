@@ -2,6 +2,7 @@ package com.observerapp.mobile.securesancharapp;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -9,6 +10,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -31,6 +33,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -47,14 +50,23 @@ public class getMedia extends AppCompatActivity implements allTime{
     Uri mVideoUri;
     Uri ResultURI;
 
+    private static Context context;
+
+    public void putSharedPref(String K, Uri V){
+        SharedPreferences sharedPreferences = context.getSharedPreferences(mypreference,Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(K,V.toString());
+        editor.commit();
+    }
+
+
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
         try{
             super.onActivityResult(requestCode, resultCode, data);
 
             if(requestCode == REQUEST_IMAGE_CAPTURE){
                 if(resultCode != RESULT_CANCELED && data != null){
-
                     Bundle extras = data.getExtras();
                     Bitmap imageBitmap = (Bitmap) extras.get("data");
                     uploadBitmap(imageBitmap);
@@ -81,6 +93,8 @@ public class getMedia extends AppCompatActivity implements allTime{
                     ResultURI = imageUri;
                 }
             }
+
+            putSharedPref(temp_media,ResultURI);
 
         }catch (Exception e){
             Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
@@ -137,7 +151,11 @@ public class getMedia extends AppCompatActivity implements allTime{
     ////////////////////
 
     public void takePicAndDisplayIt() {
+
+//        Toast.makeText(this, "QWPEQPWOEIWP", Toast.LENGTH_SHORT).show();
+
         requestRuntimePermission();
+
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (intent.resolveActivity(getPackageManager()) != null) {
             File file = null;
