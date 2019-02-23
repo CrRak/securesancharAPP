@@ -1,9 +1,138 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".welcome">
+    android:orientation="vertical"
+    tools:context=".register">
 
-</android.support.constraint.ConstraintLayout>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="15dp"
+                android:orientation="vertical"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:paddingTop="0dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Welcome"
+                    android:textSize="30dp"
+                    android:textStyle="bold"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="25dp"/>
+
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/eh1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <EditText
+                        android:id="@+id/e1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:singleLine="true"
+                        android:hint="@string/email" />
+                </android.support.design.widget.TextInputLayout>
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/eh2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <EditText
+                        android:id="@+id/e2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:singleLine="true"
+                        android:inputType="number"
+                        android:hint="@string/otp" />
+                </android.support.design.widget.TextInputLayout>
+
+
+                <ProgressBar
+                    android:id="@+id/pB1"
+                    style="?android:attr/progressBarStyleLarge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"/>
+
+                <Button android:id="@+id/b1"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/sendme"
+                    android:background="@color/colorPrimary"
+                    android:layout_marginTop="40dp"
+                    android:textColor="@android:color/white"/>
+
+                    <Button android:id="@+id/b2"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/verify"
+                        android:background="@color/colorPrimary"
+                        android:layout_marginTop="40dp"
+                        android:textColor="@android:color/white"/>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:textSize="16dp"
+                        android:id="@+id/tv1"
+                        android:layout_marginTop="10dp"
+                        android:text="Edit Email"/>
+
+                <!--
+                                <RelativeLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal">
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="Already Have an Account"
+                                        android:textSize="15dp"
+                                        android:textColor="@color/colorPrimary"
+                                        android:textStyle="bold"
+                                        android:paddingTop="10dp"
+                                        android:layout_alignParentLeft="true"
+                                        />
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="Login"
+                                        android:textSize="15dp"
+                                        android:textColor="@color/colorPrimary"
+                                        android:textStyle="bold"
+                                        android:paddingTop="10dp"
+                                        android:onClick="redirect_login"
+                                        android:layout_alignParentRight="true"
+                                        />
+
+                                </RelativeLayout>
+                -->
+
+            </LinearLayout>
+
+        </android.support.design.widget.CoordinatorLayout>
+
+
+    </ScrollView>
+
+
+</LinearLayout>

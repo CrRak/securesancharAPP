@@ -1,3 +1,19 @@
 <resources>
     <string name="app_name">securesancharAPP</string>
+    <string name="name">Name</string>
+    <string name="email">Email</string>
+    <string name="mobile">Phone No.</string>
+    <string name="username">Email/Phone</string>
+    <string name="password">Password</string>
+    <string name="r_password">Re-Enter Password</string>
+    <string name="register">REGISTER</string>
+    <string name="login">LOGIN</string>
+    <string name="sendme">Send Me Verification Code</string>
+    <string name="Continue">CONTINUE</string>
+    <string name="proceed">PROCEED</string>
+    <string name="otp">OTP</string>
+    <string name="verify">VERIFY AND PROCEED</string>
+    <string name="organization">Organization</string>
+    <string name="designation">Designation</string>
+    <string name="back">BACK</string>
 </resources>
